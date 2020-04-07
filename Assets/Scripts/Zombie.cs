@@ -5,7 +5,6 @@ using UnityEngine;
 public class Zombie : MonoBehaviour
 {
     [SerializeField] float speed = 20;
-    float rotationDegreesPerSecond = 360;
     public Vector3 position;
     public Vector3 destination;
 

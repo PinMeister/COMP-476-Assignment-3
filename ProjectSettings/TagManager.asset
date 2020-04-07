@@ -5,13 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Wall
-  - Not Tagged
   - Floor
-  - Node
-  - NPC 1
-  - NPC 2
-  - Cluster
-  - Tagged
+  - Projectile
+  - Tank
   layers:
   - Default
   - TransparentFX
