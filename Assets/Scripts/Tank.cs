@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Tank : MonoBehaviour
 {
+    private PhotonView view;
+
     [SerializeField] float moveSpeed = 30;
     [SerializeField] float rotateSpeed = 100;
     [SerializeField] GameObject shellPrefab;
@@ -16,13 +18,14 @@ public class Tank : MonoBehaviour
 
     void Start()
     {
+        view = GetComponent<PhotonView>();
         alive = true;
         timer = 0.75f;
     }
 
     void Update()
     {
-        if (alive) // can only move and shoot while alive
+        if (view.IsMine && alive) // can only move and shoot while alive
         {
             if (Input.GetAxisRaw("Vertical") < 0)
                 transform.Translate(-Vector3.forward * moveSpeed * Time.deltaTime);
@@ -68,12 +71,6 @@ public class Tank : MonoBehaviour
             {
                 transform.GetChild(2).gameObject.SetActive(false);
             }
-        }
-
-        if (!alive && Input.GetKeyDown(KeyCode.Return)) // if any one tank is dead, press enter to reload scene
-        {
-            Time.timeScale = 1;
-            SceneManager.LoadScene(0);
         }
     }
 
