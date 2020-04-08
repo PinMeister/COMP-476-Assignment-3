@@ -1,25 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Tank : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 30;
     [SerializeField] float rotateSpeed = 100;
-    public bool player1Fired;
-    public bool player2Fired;
+    [SerializeField] GameObject shellPrefab;
+    [SerializeField] Transform fireTransform;
     public bool alive;
+    public bool cooldown;
+    public bool poweredUp;
+    public float timer;
 
     void Start()
     {
-        player1Fired = false;
-        player2Fired = false;
         alive = true;
+        timer = 0.75f;
     }
 
     void Update()
     {
-        if (alive)
+        if (alive) // can only move and shoot while alive
         {
             if (Input.GetAxisRaw("Vertical") < 0)
                 transform.Translate(-Vector3.forward * moveSpeed * Time.deltaTime);
@@ -30,17 +33,56 @@ public class Tank : MonoBehaviour
             if (Input.GetAxisRaw("Horizontal") > 0)
                 transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
 
-            if (Input.GetKeyDown(KeyCode.Space)) // press space to fire projectile
+            if (Input.GetKeyDown(KeyCode.Space) && !cooldown) // press space to fire projectile, cannot spam projectiles
             {
-                if (this.name == "Player 1")
+                AudioSource shooting = GetComponent<AudioSource>();
+                shooting.Play();
+
+                GameObject shell = Instantiate(shellPrefab, fireTransform.position, this.transform.rotation);
+                shell.transform.localScale = new Vector3(4, 4, 4);
+                cooldown = true;
+
+                if (poweredUp)
                 {
-                    player1Fired = true;
-                }
-                if (this.name == "Player 2")
-                {
-                    player2Fired = true;
+                    shell.GetComponent<Shell>().poweredUp = true;
+                    poweredUp = false;
                 }
             }
+            
+            if (cooldown)
+            {
+                timer -= Time.deltaTime;
+
+                if (timer <= 0)
+                {
+                    timer = 0.75f;
+                    cooldown = false;
+                }
+            }
+
+            if (poweredUp)
+            {
+                transform.GetChild(2).gameObject.SetActive(true);
+            }
+            else
+            {
+                transform.GetChild(2).gameObject.SetActive(false);
+            }
+        }
+
+        if (!alive && Input.GetKeyDown(KeyCode.Return)) // if any one tank is dead, press enter to reload scene
+        {
+            Time.timeScale = 1;
+            SceneManager.LoadScene(0);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other) // pick up powerup and destroy it
+    {
+        if (!poweredUp)
+        {
+            poweredUp = true;
+            Destroy(other.gameObject.transform.parent.gameObject);
         }
     }
 }

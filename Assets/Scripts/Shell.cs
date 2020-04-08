@@ -4,39 +4,48 @@ using UnityEngine;
 
 public class Shell : MonoBehaviour
 {
-    Tank player;
+    [SerializeField] public float shellSpeed = 60;
+    public bool poweredUp;
+    AudioSource explosion;
 
     void Start()
     {
-        player = transform.parent.gameObject.GetComponent<Tank>();
+        explosion = GameObject.Find("Shell Explosion").GetComponent<AudioSource>();
+    }
+    void Update()
+    {
+        transform.Translate(transform.forward * shellSpeed * Time.deltaTime, Space.World);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Wall")
+        if (collision.gameObject.tag == "Wall") // destroy wall upon collision, if powered up, can destroy two walls
         {
-            Destroy(collision.gameObject);
-
-            if (transform.parent.name == "Player 1")
+            if (poweredUp)
             {
-                player.player1Fired = false;
+                Destroy(collision.gameObject);
+                explosion.Play();
+                poweredUp = false;
             }
-
-            if (transform.parent.name == "Player 2")
+            else
             {
-                player.player2Fired = false;
+                Destroy(collision.gameObject);
+                explosion.Play();
+                Destroy(gameObject);
             }
-
-            Destroy(this);
         }
-
-        if (collision.gameObject.tag == "Tank") // if shell collides with tank, put it in "Dead" state
+        else if (collision.gameObject.tag == "Tank") // if shell collides with tank, put it in "Dead" state and stop game
         {
             collision.gameObject.transform.GetChild(0).gameObject.SetActive(false);
             collision.gameObject.transform.GetChild(1).gameObject.SetActive(true);
             collision.gameObject.GetComponent<Tank>().alive = false;
-
-            Destroy(this);
+            explosion.Play();
+            Destroy(gameObject);
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 }
