@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Shell : MonoBehaviour
+public class Shell : MonoBehaviourPun
 {
     [SerializeField] public float shellSpeed = 60;
     public bool poweredUp;
@@ -23,6 +24,7 @@ public class Shell : MonoBehaviour
         {
             if (poweredUp)
             {
+                photonView.RPC("powerUpShell", RpcTarget.Others);
                 Destroy(collision.gameObject);
                 explosion.Play();
                 poweredUp = false;
@@ -46,5 +48,11 @@ public class Shell : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    [PunRPC]
+    private void powerUpShell()
+    {
+        poweredUp = true;
     }
 }

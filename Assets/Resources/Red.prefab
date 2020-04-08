@@ -1000,7 +1000,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 30
   rotateSpeed: 100
-  shellPrefab: {fileID: 192454, guid: fdd431b5741084441b267035374f5de1, type: 3}
   fireTransform: {fileID: 8780914223847613772}
   alive: 0
   cooldown: 0

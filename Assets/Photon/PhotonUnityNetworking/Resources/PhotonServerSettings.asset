@@ -33,6 +33,10 @@ MonoBehaviour:
   RpcList:
   - ClickRpc
   - DestroyRpc
+  - checkPoweredUp
+  - shoot
+  - powerUpShell
+  - removePowerUp
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -7,7 +7,6 @@ public class Tank : MonoBehaviourPun
 {
     [SerializeField] float moveSpeed = 30;
     [SerializeField] float rotateSpeed = 100;
-    [SerializeField] GameObject shellPrefab;
     [SerializeField] Transform fireTransform;
     public bool alive;
     public bool cooldown;
@@ -60,14 +59,7 @@ public class Tank : MonoBehaviourPun
                 }
             }
 
-            if (poweredUp)
-            {
-                transform.GetChild(2).gameObject.SetActive(true);
-            }
-            else
-            {
-                transform.GetChild(2).gameObject.SetActive(false);
-            }
+            photonView.RPC("checkPoweredUp", RpcTarget.All);
         }
     }
 
@@ -77,6 +69,19 @@ public class Tank : MonoBehaviourPun
         {
             poweredUp = true;
             Destroy(other.gameObject.transform.parent.gameObject);
+        }
+    }
+
+    [PunRPC]
+    private void checkPoweredUp()
+    {
+        if (poweredUp)
+        {
+            transform.GetChild(2).gameObject.SetActive(true);
+        }
+        else
+        {
+            transform.GetChild(2).gameObject.SetActive(false);
         }
     }
 }
