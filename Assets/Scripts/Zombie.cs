@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Zombie : MonoBehaviour
+public class Zombie : MonoBehaviourPun
 {
     [SerializeField] float speed = 20;
     [SerializeField] GameObject shellPrefab;
@@ -82,7 +83,7 @@ public class Zombie : MonoBehaviour
                 AudioSource shooting = GetComponent<AudioSource>();
                 shooting.Play();
 
-                GameObject shell = Instantiate(shellPrefab, fireTransform.position, this.transform.rotation);
+                GameObject shell = PhotonNetwork.Instantiate("Shell", fireTransform.position, this.transform.rotation);
                 shell.transform.localScale = new Vector3(4, 4, 4);
                 cooldown = true;
             }

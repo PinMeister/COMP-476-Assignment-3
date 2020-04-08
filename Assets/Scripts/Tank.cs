@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tank : MonoBehaviour
+public class Tank : MonoBehaviourPun
 {
-    private PhotonView view;
-
     [SerializeField] float moveSpeed = 30;
     [SerializeField] float rotateSpeed = 100;
     [SerializeField] GameObject shellPrefab;
@@ -18,14 +16,13 @@ public class Tank : MonoBehaviour
 
     void Start()
     {
-        view = GetComponent<PhotonView>();
         alive = true;
         timer = 0.75f;
     }
 
     void Update()
     {
-        if (view.IsMine && alive) // can only move and shoot while alive
+        if (photonView.IsMine && alive) // can only move and shoot while alive
         {
             if (Input.GetAxisRaw("Vertical") < 0)
                 transform.Translate(-Vector3.forward * moveSpeed * Time.deltaTime);
@@ -41,7 +38,7 @@ public class Tank : MonoBehaviour
                 AudioSource shooting = GetComponent<AudioSource>();
                 shooting.Play();
 
-                GameObject shell = Instantiate(shellPrefab, fireTransform.position, this.transform.rotation);
+                GameObject shell = PhotonNetwork.Instantiate("Shell", fireTransform.position, this.transform.rotation);
                 shell.transform.localScale = new Vector3(4, 4, 4);
                 cooldown = true;
 

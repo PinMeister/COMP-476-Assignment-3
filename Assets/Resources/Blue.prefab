@@ -371,7 +371,7 @@ GameObject:
   - component: {fileID: 5687669176029609434}
   - component: {fileID: 6734249580780434490}
   m_Layer: 9
-  m_Name: Tank
+  m_Name: Blue
   m_TagString: Tank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

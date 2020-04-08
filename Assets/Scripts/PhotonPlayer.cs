@@ -4,16 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class PhotonPlayer : MonoBehaviour
+public class PhotonPlayer : MonoBehaviourPun
 {
-    private PhotonView view;
     public GameObject avatar;
 
     void Start()
     {
-        view = GetComponent<PhotonView>();
-
-        if (view.IsMine)
+        if (photonView.IsMine)
         {
             if (PhotonNetwork.IsMasterClient)
             {

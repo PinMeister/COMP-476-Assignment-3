@@ -41,7 +41,6 @@ public class Shell : MonoBehaviour
             collision.gameObject.GetComponent<Tank>().alive = false;
             explosion.Play();
             Destroy(gameObject);
-            Time.timeScale = 0;
         }
         else
         {
