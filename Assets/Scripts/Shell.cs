@@ -20,21 +20,11 @@ public class Shell : MonoBehaviourPun
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Wall") // destroy wall upon collision, if powered up, can destroy two walls
+        if (collision.gameObject.tag == "Wall") // destroy wall upon collision
         {
-            if (poweredUp)
-            {
-                photonView.RPC("powerUpShell", RpcTarget.Others);
-                Destroy(collision.gameObject);
-                explosion.Play();
-                poweredUp = false;
-            }
-            else
-            {
-                Destroy(collision.gameObject);
-                explosion.Play();
-                Destroy(gameObject);
-            }
+            Destroy(collision.gameObject);
+            explosion.Play();
+            Destroy(gameObject);
         }
         else if (collision.gameObject.tag == "Tank") // if shell collides with tank, put it in "Dead" state and stop game
         {
@@ -43,16 +33,11 @@ public class Shell : MonoBehaviourPun
             collision.gameObject.GetComponent<Tank>().alive = false;
             explosion.Play();
             Destroy(gameObject);
+            Time.timeScale = 0;
         }
         else
         {
             Destroy(gameObject);
         }
-    }
-
-    [PunRPC]
-    private void powerUpShell()
-    {
-        poweredUp = true;
     }
 }

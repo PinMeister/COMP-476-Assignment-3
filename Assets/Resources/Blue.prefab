@@ -442,6 +442,7 @@ MonoBehaviour:
   cooldown: 0
   poweredUp: 0
   timer: 0
+  boostTimer: 0
 --- !u!82 &-5651153411442227356
 AudioSource:
   m_ObjectHideFlags: 0

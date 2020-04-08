@@ -10,8 +10,14 @@ public class Zombie : MonoBehaviourPun
     [SerializeField] Transform fireTransform;
     public Vector3 position;
     public Vector3 destination;
+    public Vector3 direction;
     public bool cooldown;
     public float timer;
+
+    public bool north;
+    public bool south;
+    public bool east;
+    public bool west;
 
     void Start()
     {
@@ -30,21 +36,37 @@ public class Zombie : MonoBehaviourPun
         {
             position = new Vector3(-41, 0, 45);
             destination = new Vector3(-41, 0, 29);
+            north = false;
+            south = true;
+            east = false;
+            west = false;
         }
         if (transform.position == new Vector3(-41, 0, 29))
         {
             position = new Vector3(-41, 0, 29);
             destination = new Vector3(5, 0, 29);
+            north = false;
+            south = false;
+            east = true;
+            west = false;
         }
         if (transform.position == new Vector3(5, 0, 29))
         {
             position = new Vector3(5, 0, 29);
             destination = new Vector3(5, 0, 45);
+            north = true;
+            south = false;
+            east = false;
+            west = false;
         }
         if (transform.position == new Vector3(5, 0, 45))
         {
             position = new Vector3(5, 0, 45);
             destination = new Vector3(-41, 0, 45);
+            north = false;
+            south = false;
+            east = false;
+            west = true;
         }        
         
         // Set destination for Zombie 2
@@ -52,32 +74,64 @@ public class Zombie : MonoBehaviourPun
         {
             position = new Vector3(17, 0, 15);
             destination = new Vector3(17, 0, -15);
+            north = false;
+            south = true;
+            east = false;
+            west = false;
         }
         if (transform.position == new Vector3(17, 0, -15))
         {
             position = new Vector3(17, 0, -15);
             destination = new Vector3(-41, 0, -15);
+            north = false;
+            south = false;
+            east = false;
+            west = true;
         }
         if (transform.position == new Vector3(-41, 0, -15))
         {
             position = new Vector3(-41, 0, -15);
             destination = new Vector3(-41, 0, 15);
+            north = true;
+            south = false;
+            east = false;
+            west = false;
         }
         if (transform.position == new Vector3(-41, 0, 15))
         {
             position = new Vector3(-41, 0, 15);
             destination = new Vector3(17, 0, 15);
+            north = false;
+            south = false;
+            east = true;
+            west = false;
         }
 
-        Vector3 velocity = destination - position;
+        if (north)
+        {
+            direction = new Vector3(0, 0, 1);
+        }
+        if (south)
+        {
+            direction = new Vector3(0, 0, -1);
+        }
+        if (east)
+        {
+            direction = new Vector3(1, 0, 0);
+        }
+        if (west)
+        {
+            direction = new Vector3(-1, 0, 0);
+        }
+
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
         transform.LookAt(destination);
 
         // Shoot if player tank is directly in front of them with no obstacles between them
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        if (Physics.Raycast(transform.position, direction, out hit))
         {
-            Debug.DrawRay(transform.position, transform.forward * 50, Color.green);
+            Debug.DrawRay(transform.position, direction * 50, Color.green);
             if (hit.collider.tag == "Tank" && !cooldown)
             {
                 AudioSource shooting = GetComponent<AudioSource>();

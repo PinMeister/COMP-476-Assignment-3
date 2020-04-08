@@ -12,11 +12,13 @@ public class Tank : MonoBehaviourPun
     public bool cooldown;
     public bool poweredUp;
     public float timer;
+    public float boostTimer;
 
     void Start()
     {
         alive = true;
         timer = 0.75f;
+        boostTimer = 3;
     }
 
     void Update()
@@ -40,12 +42,6 @@ public class Tank : MonoBehaviourPun
                 GameObject shell = PhotonNetwork.Instantiate("Shell", fireTransform.position, this.transform.rotation);
                 shell.transform.localScale = new Vector3(4, 4, 4);
                 cooldown = true;
-
-                if (poweredUp)
-                {
-                    shell.GetComponent<Shell>().poweredUp = true;
-                    poweredUp = false;
-                }
             }
             
             if (cooldown)
@@ -59,7 +55,19 @@ public class Tank : MonoBehaviourPun
                 }
             }
 
-            photonView.RPC("checkPoweredUp", RpcTarget.All);
+            if (poweredUp)
+            {
+                //transform.GetChild(2).gameObject.SetActive(true);
+                moveSpeed = 60;
+                boostTimer -= Time.deltaTime;
+
+                if (boostTimer <= 0)
+                {
+                    boostTimer = 3;
+                    moveSpeed = 30;
+                    photonView.RPC("undoPowerUp", RpcTarget.All);
+                }
+            }
         }
     }
 
@@ -73,15 +81,9 @@ public class Tank : MonoBehaviourPun
     }
 
     [PunRPC]
-    private void checkPoweredUp()
+    private void undoPowerUp()
     {
-        if (poweredUp)
-        {
-            transform.GetChild(2).gameObject.SetActive(true);
-        }
-        else
-        {
-            transform.GetChild(2).gameObject.SetActive(false);
-        }
+        poweredUp = false;
+        //transform.GetChild(2).gameObject.SetActive(false);
     }
 }
