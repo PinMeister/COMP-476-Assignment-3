@@ -59,12 +59,14 @@ public class Tank : MonoBehaviourPun
             {
                 //transform.GetChild(2).gameObject.SetActive(true);
                 moveSpeed = 60;
+                rotateSpeed = 200;
                 boostTimer -= Time.deltaTime;
 
                 if (boostTimer <= 0)
                 {
                     boostTimer = 3;
                     moveSpeed = 30;
+                    rotateSpeed = 100;
                     photonView.RPC("undoPowerUp", RpcTarget.All);
                 }
             }
